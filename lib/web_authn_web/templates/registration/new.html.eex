@@ -1,0 +1,9 @@
+<form id="registration_form" action="">
+  <label for="name">Name</label>
+  <input name="name" type="text" required="required" value=""/>
+
+  <label for="email">Email</label>
+  <input name="email" type="email" required="required" value=""/>
+
+  <button>Register</button>
+</form>
