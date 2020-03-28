@@ -1,5 +1,6 @@
 defmodule WebAuthn.Registrations.StoreProcedure do
   alias WebAuthn.Registrations.Registration
+  alias WebAuthn.Registrations.RegistrationChallenge
   alias Ecto.Multi
 
   def create_registration(%{email: _, name: _} = params) do
@@ -11,15 +12,15 @@ defmodule WebAuthn.Registrations.StoreProcedure do
       %Registration{}
       |> Registration.changeset(registration_create_params)
     )
-    |> Multi.merge(fn %{registration: r} ->
-      create_challenge(r)
+    |> Multi.merge(fn %{registration: registration} ->
+      create_challenge(registration)
     end)
   end
 
   def renew_challenge(registration) do
     Multi.new()
     |> Multi.update_all(
-      :deactivate_old_challenges,
+      :deactivate_challenges,
       Ecto.assoc(registration, :challenges),
       set: [status: "inactive"]
     )
@@ -28,19 +29,24 @@ defmodule WebAuthn.Registrations.StoreProcedure do
     end)
   end
 
-  def create_challenge(registration) do
-    Multi.insert(
-      Multi.new(),
-      :challenge,
-      Ecto.build_assoc(registration, :challenges, %{
-        status: "active",
-        challenge: generate_challenge()
-      })
-    )
-  end
+  defp create_challenge(registration) do
+    attrs = %{
+      relying_party_name: "Wiwatta Mongkhonchit",
+      relying_party_id: "localhost",
+      username: registration.email,
+      display_name: registration.name,
+      timeout: 60000,
+      attestation: "direct",
+      user_verification: "required",
+      status: "active"
+    }
 
-  defp generate_challenge do
-    :crypto.strong_rand_bytes(16)
-    |> Base.encode64()
+    Multi.new()
+    |> Multi.insert(
+      :challenge,
+      registration
+      |> Ecto.build_assoc(:challenges)
+      |> RegistrationChallenge.changeset(attrs)
+    )
   end
 end

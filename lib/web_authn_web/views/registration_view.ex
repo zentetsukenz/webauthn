@@ -1,14 +1,11 @@
 defmodule WebAuthnWeb.RegistrationView do
   use WebAuthnWeb, :view
 
-  alias WebAuthnWeb.Router.Helpers, as: Routes
-  alias WebAuthnWeb.Endpoint
-
   def render("base.json", %{registration: r}) do
     %{object: "registration", status: r.status, uid: r.uid}
   end
 
-  def render("challenge.json", %{registration: r}) do
+  def render("init.json", %{registration: r}) do
     r
     |> render_one(WebAuthnWeb.RegistrationView, "base.json")
     |> Map.merge(render_one(r, WebAuthnWeb.RegistrationView, "registration.json"))
@@ -24,12 +21,39 @@ defmodule WebAuthnWeb.RegistrationView do
     |> Map.merge(render_instruction(r))
   end
 
-  defp render_instruction(%{instruction: :public_key, public_key: p}) do
+  defp render_instruction(%{instruction: :credential, credential: c}) do
     %{
-      public_key: %{
-        location: Routes.registration_url(Endpoint, :public_key),
-        challenge: p.challenge
+      credential: %{
+        uid: c.uid,
+        challenge: c.challenge,
+        rp: %{
+          id: c.rp_id,
+          name: c.rp_name
+        },
+        user: %{
+          id: c.user_uid,
+          name: c.username,
+          display_name: c.display_name
+        },
+        public_key_credential_params: [
+          %{
+            alg: -7,
+            type: "public-key"
+          }
+        ],
+        timeout: c.timeout,
+        attestation: c.attestation,
+        user_verification: c.user_verification
       }
     }
+  end
+
+  def render("credential.json", %{registration: r}) do
+    r
+    |> render_one(WebAuthnWeb.RegistrationView, "base.json")
+  end
+
+  def render("temp.json", _assigns) do
+    %{test: true}
   end
 end

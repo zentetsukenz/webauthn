@@ -5,14 +5,26 @@ defmodule WebAuthn.Registrations.Object do
           email: String.t(),
           name: String.t(),
           instruction: instruction(),
-          public_key: public_key()
+          credential: credential()
         }
 
   @type status :: :pending | :complete
-  @type instruction :: :public_key
-  @type public_key :: %{
-          challenge: String.t()
+  @type instruction :: :credential
+  @type credential :: %{
+          uid: String.t(),
+          challenge: String.t(),
+          rp_name: String.t(),
+          rp_id: String.t(),
+          user_uid: String.t(),
+          username: String.t(),
+          display_name: String.t(),
+          timeout: integer(),
+          attestation: attestation(),
+          user_verification: user_verification()
         }
+
+  @type attestation :: :direct | :indirect | :none
+  @type user_verification :: :required | :preferred | :discouraged
 
   defstruct(
     uid: nil,
@@ -20,6 +32,6 @@ defmodule WebAuthn.Registrations.Object do
     email: nil,
     name: nil,
     instruction: nil,
-    public_key: nil
+    credential: nil
   )
 end

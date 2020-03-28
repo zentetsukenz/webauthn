@@ -1,5 +1,5 @@
-defmodule WebAuthnWeb.RegistrationParams.Challenge do
-  use Ecto.Schema
+defmodule WebAuthnWeb.RegistrationParams.CredentialOptions do
+  use WebAuthnWeb.ParamSchema
   import Ecto.Changeset
 
   embedded_schema do

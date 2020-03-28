@@ -3,6 +3,7 @@ defmodule WebAuthn.Repo.Migrations.CreateRegistrations do
 
   def change do
     create table(:registrations) do
+      add :uid, :string
       add :email, :string
       add :name, :string
       add :status, :string

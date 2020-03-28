@@ -37,4 +37,21 @@ defmodule WebAuthn.Registrations do
         {:error, error}
     end
   end
+
+  def verify(%{challenge: challenge, credential: credential}) do
+    %{
+      client_data: client_data
+    } = credential
+
+    IO.inspect(client_data)
+
+    with {:ok, decoded_client_data} <- decode_client_data(client_data) do
+      IO.inspect(decoded_client_data)
+      {:ok, nil}
+    end
+  end
+
+  defp decode_client_data(client_data) do
+    Base.decode64(client_data)
+  end
 end

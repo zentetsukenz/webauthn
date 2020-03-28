@@ -36,7 +36,6 @@ defmodule WebAuthnWeb.Router do
   scope "/register", WebAuthnWeb do
     pipe_through :api
 
-    post "/challenge", RegistrationController, :challenge
-    post "/public_key", RegistrationController, :public_key
+    post "/", RegistrationController, :create
   end
 end
