@@ -8,12 +8,9 @@ defmodule WebAuthn.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Start the Ecto repository
       WebAuthn.Repo,
-      # Start the endpoint when the application starts
-      WebAuthnWeb.Endpoint
-      # Starts a worker by calling: WebAuthn.Worker.start_link(arg)
-      # {WebAuthn.Worker, arg},
+      WebAuthnWeb.Endpoint,
+      {Phoenix.PubSub, [name: WebAuthn.PubSub, adapter: Phoenix.PubSub.PG2]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -15,7 +15,7 @@ config :web_authn, WebAuthnWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "EL8XJ1WlZFDsf+OnAXlFYG/UMM6aGT1KjPEVYubToeAeZSUG2UASkFWZql1JVFj/",
   render_errors: [view: WebAuthnWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: WebAuthn.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: WebAuthn.PubSub,
   live_view: [signing_salt: "2bP74ltV"]
 
 # Configures Elixir's Logger

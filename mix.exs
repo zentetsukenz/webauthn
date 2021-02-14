@@ -20,7 +20,7 @@ defmodule WebAuthn.MixProject do
   def application do
     [
       mod: {WebAuthn.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :crypto]
     ]
   end
 
