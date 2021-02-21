@@ -1,32 +1,37 @@
 const path = require('path');
-const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, options) => ({
+  mode: 'production',
+  devtool: 'source-map',
   optimization: {
     minimizer: [
-      new TerserPlugin({ cache: true, parallel: true, sourceMap: false }),
+      new TerserPlugin({ parallel: true, terserOptions: { sourceMap: false } }),
       new OptimizeCSSAssetsPlugin({})
     ]
   },
-  entry: {
-    './js/app.js': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
-  },
+  entry: './js/app.js',
   output: {
     filename: 'app.js',
     path: path.resolve(__dirname, '../priv/static/js')
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
+          loader: 'babel-loader',
+        },
+        use: {
+          loader: 'ts-loader',
+        },
       },
       {
         test: /\.css$/,
@@ -36,6 +41,6 @@ module.exports = (env, options) => ({
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '../css/app.css' }),
-    new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
-  ]
+    new CopyWebpackPlugin({ patterns: [{ from: 'static/', to: '../' }] })
+  ],
 });
