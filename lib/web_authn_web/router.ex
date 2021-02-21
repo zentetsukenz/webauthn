@@ -12,6 +12,12 @@ defmodule WebAuthnWeb.Router do
   scope "/", WebAuthnWeb do
     pipe_through :browser
 
+    get "/", ApplicationController, :new
+  end
+
+  scope "/registration", WebAuthnWeb do
+    pipe_through :browser
+
     get "/", RegistrationController, :new
   end
 end

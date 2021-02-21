@@ -47,13 +47,4 @@ defmodule WebAuthnWeb.RegistrationView do
       }
     }
   end
-
-  def render("credential.json", %{registration: r}) do
-    r
-    |> render_one(WebAuthnWeb.RegistrationView, "base.json")
-  end
-
-  def render("temp.json", _assigns) do
-    %{test: true}
-  end
 end
