@@ -9,6 +9,10 @@ defmodule WebAuthnWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :api do
+    plug :accepts, ["json"]
+  end
+
   scope "/", WebAuthnWeb do
     pipe_through :browser
 
@@ -16,7 +20,7 @@ defmodule WebAuthnWeb.Router do
   end
 
   scope "/registration", WebAuthnWeb do
-    pipe_through :browser
+    pipe_through :api
 
     get "/", RegistrationController, :new
   end
